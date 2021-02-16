@@ -1,62 +1,49 @@
-package com.example.dslearnbds.entities;
+package com.devsuperior.dslearnbds.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tb_lesson")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Lesson implements Serializable{
+@Table(name = "tb_section")
+public class Section implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
+	private String description;
 	private Integer position;
+	private String imgUri;
 	
 	@ManyToOne
-	@JoinColumn(name = "section_id")
-	private Section section;
+	@JoinColumn(name = "resource_id")
+	private Resource resource;
 	
-	@ManyToMany
-	@JoinTable(name = "tb_lessons_done",
-	joinColumns = @JoinColumn(name = "lesson_id"),
-	inverseJoinColumns = {
-			@JoinColumn(name = "user_id"),
-			@JoinColumn(name = "offer_id")
-	})
-	private Set<Enrollment> enrollmentsDone = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "prerequisite_id")
+	private Section prerequisite;
 	
-	@OneToMany(mappedBy = "lesson")
-	private List<Deliver> deliveries = new ArrayList<>();
-	
-	public Lesson() {
-		
+	public Section() {
 	}
 
-	public Lesson(Long id, String title, Integer position, Section section) {
+	public Section(Long id, String title, String description, Integer position, String imgUri, Resource resource,
+			Section prerequisite) {
 		super();
 		this.id = id;
 		this.title = title;
+		this.description = description;
 		this.position = position;
-		this.section = section;
+		this.imgUri = imgUri;
+		this.resource = resource;
+		this.prerequisite = prerequisite;
 	}
 
 	public Long getId() {
@@ -75,6 +62,14 @@ public abstract class Lesson implements Serializable{
 		this.title = title;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Integer getPosition() {
 		return position;
 	}
@@ -83,20 +78,28 @@ public abstract class Lesson implements Serializable{
 		this.position = position;
 	}
 
-	public Section getSection() {
-		return section;
+	public String getImgUri() {
+		return imgUri;
 	}
 
-	public void setSection(Section section) {
-		this.section = section;
+	public void setImgUri(String imgUri) {
+		this.imgUri = imgUri;
 	}
 
-	public Set<Enrollment> getEnrollmentsDone() {
-		return enrollmentsDone;
+	public Resource getResource() {
+		return resource;
 	}
-	
-	public List<Deliver> getDeliveries() {
-		return deliveries;
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	public Section getPrerequisite() {
+		return prerequisite;
+	}
+
+	public void setPrerequisite(Section prerequisite) {
+		this.prerequisite = prerequisite;
 	}
 
 	@Override
@@ -115,7 +118,7 @@ public abstract class Lesson implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Lesson other = (Lesson) obj;
+		Section other = (Section) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -123,5 +126,4 @@ public abstract class Lesson implements Serializable{
 			return false;
 		return true;
 	}
-	
 }

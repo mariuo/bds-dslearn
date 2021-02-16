@@ -1,4 +1,4 @@
-package com.example.dslearnbds.entities;
+package com.devsuperior.dslearnbds.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_lesson")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Lesson implements Serializable{
+public abstract class Lesson implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -35,20 +35,20 @@ public abstract class Lesson implements Serializable{
 	@JoinColumn(name = "section_id")
 	private Section section;
 	
-	@ManyToMany
-	@JoinTable(name = "tb_lessons_done",
-	joinColumns = @JoinColumn(name = "lesson_id"),
-	inverseJoinColumns = {
-			@JoinColumn(name = "user_id"),
-			@JoinColumn(name = "offer_id")
-	})
-	private Set<Enrollment> enrollmentsDone = new HashSet<>();
-	
 	@OneToMany(mappedBy = "lesson")
 	private List<Deliver> deliveries = new ArrayList<>();
 	
+	@ManyToMany
+	@JoinTable(name = "tb_lessons_done",
+		joinColumns = @JoinColumn(name = "lesson_id"),
+		inverseJoinColumns = {
+				@JoinColumn(name = "user_id"),
+				@JoinColumn(name = "offer_id")
+		}
+	)
+	private Set<Enrollment> enrollmentsDone = new HashSet<>();
+	
 	public Lesson() {
-		
 	}
 
 	public Lesson(Long id, String title, Integer position, Section section) {
@@ -94,7 +94,7 @@ public abstract class Lesson implements Serializable{
 	public Set<Enrollment> getEnrollmentsDone() {
 		return enrollmentsDone;
 	}
-	
+
 	public List<Deliver> getDeliveries() {
 		return deliveries;
 	}
@@ -123,5 +123,4 @@ public abstract class Lesson implements Serializable{
 			return false;
 		return true;
 	}
-	
 }
